@@ -2,6 +2,14 @@ import { HA_CHARGE_INSTRUCTION } from "../models/HA/ha-charge-instruction";
 import { CHARGE_STATE } from "../models/smappee/charge-state-enum";
 import { updateChargingMode } from "../domain/smappee/charging/updateChargingMode";
 import { logger } from "../utils/logger";
+import {
+  SLOWCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD,
+  SLOWCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD,
+  SUNCHARGE_PAUSED_TO_SLOW_INVERTER_THRESHOLD,
+  SUNCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD,
+  SUNCHARGE_SLOW_TO_PAUSED_INVERTER_THRESHOLD,
+  SUNCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD,
+} from "../constants";
 
 export const decisionMaker = (
   sensorPowerConsumedInWatt: number,
@@ -42,17 +50,11 @@ const decisionSlowCharge = async (
   currentChargingState: CHARGE_STATE
 ) => {
   if (currentChargingState === CHARGE_STATE.PAUSED) {
-    if (
-      (sensorPowerConsumedInWatt < 800 && sensorInverterSolarInWatt <= 2000) ||
-      (sensorPowerConsumedInWatt < 1000 && sensorInverterSolarInWatt > 2000)
-    ) {
+    if (sensorPowerConsumedInWatt < SLOWCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD) {
       await updateChargingMode(CHARGE_STATE.SLOW);
     }
   } else if (currentChargingState === CHARGE_STATE.SLOW) {
-    if (
-      (sensorPowerConsumedInWatt > 4800 && sensorInverterSolarInWatt <= 2000) ||
-      sensorPowerConsumedInWatt > 5000
-    ) {
+    if (sensorPowerConsumedInWatt > SLOWCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD) {
       await updateChargingMode(CHARGE_STATE.PAUSED);
     }
   }
@@ -67,13 +69,19 @@ const decissionSunCharge = async (
   currentChargingState: CHARGE_STATE
 ) => {
   if (currentChargingState === CHARGE_STATE.PAUSED) {
-    if (sensorPowerConsumedInWatt < 300 && sensorInverterSolarInWatt > 1100) {
+    if (
+      sensorPowerConsumedInWatt < SUNCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD &&
+      sensorInverterSolarInWatt > SUNCHARGE_PAUSED_TO_SLOW_INVERTER_THRESHOLD
+    ) {
       await updateChargingMode(CHARGE_STATE.SLOW);
     }
   }
 
   if (currentChargingState === CHARGE_STATE.SLOW) {
-    if (sensorPowerConsumedInWatt > 4000 || sensorInverterSolarInWatt < 900) {
+    if (
+      sensorPowerConsumedInWatt > SUNCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD ||
+      sensorInverterSolarInWatt < SUNCHARGE_SLOW_TO_PAUSED_INVERTER_THRESHOLD
+    ) {
       await updateChargingMode(CHARGE_STATE.PAUSED);
     }
   }

@@ -5,6 +5,8 @@ import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import chargeInstructionRouter from "./routes/charge-instruction";
 import { logger } from "./utils/logger";
+import { overwriteSmappeesChargingState } from "./ticker/overwrite-smappees-charging-state";
+import { ticker } from "./ticker/ticker";
 
 const app: Express = express();
 const PORT = 3000;
@@ -31,5 +33,5 @@ app.listen(PORT, () => {
   logger.info("started the app!");
 });
 
-// setInterval(() => ticker(), 1000 * 60 * 1);
-// setInterval(() => overwriteSmappeesChargingState(), 1000 * 60 * 1 * 5 + 1000);
+setInterval(() => ticker(), 1000 * 60 * 1);
+setInterval(() => overwriteSmappeesChargingState(), 1000 * 60 * 1 * 5 + 1000);
