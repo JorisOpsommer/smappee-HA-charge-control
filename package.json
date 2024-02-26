@@ -1,0 +1,38 @@
+{
+  "name": "smappee-ha-charge-control",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild src/index.ts --bundle --platform=node --outdir=dist --target=node14",
+    "watch": "esbuild src/index.ts --bundle --platform=node --outdir=dist --target=node14 --watch",
+    "prod": "npm run build && npm run start-prod",
+    "start-prod": "node dist/index.js",
+    "start": "rimraf combined.log && rimraf error.log && nodemon"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node-fetch": "^2.6.11",
+    "esbuild": "^0.20.0",
+    "nodemon": "^3.0.3",
+    "typescript": "^5.3.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.10",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.3.2",
+    "rimraf": "^5.0.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
+  }
+}
