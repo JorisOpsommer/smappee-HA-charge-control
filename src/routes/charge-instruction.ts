@@ -28,15 +28,11 @@ chargeInstructionRouter.get("/", async (req: Request, res: Response) => {
   });
 });
 
-chargeInstructionRouter.post(
-  "/api/instruction",
-  async (req: Request, res: Response) => {
-    const newInstruction: { chargeInstruction: HA_CHARGE_INSTRUCTION } =
-      req.body;
-    setChargeInstruction(newInstruction.chargeInstruction);
+chargeInstructionRouter.post("/", async (req: Request, res: Response) => {
+  const newInstruction: { chargeInstruction: HA_CHARGE_INSTRUCTION } = req.body;
+  setChargeInstruction(newInstruction.chargeInstruction);
 
-    res.send(`changed mode to ${currentChargeInstruction}`);
-  }
-);
+  res.send(`changed mode to ${currentChargeInstruction}`);
+});
 
 export default chargeInstructionRouter;
