@@ -1,12 +1,10 @@
+import dayjs from "dayjs";
 import express, { Request, Response } from "express";
 import {
   currentChargeInstruction,
   setChargeInstruction,
 } from "../domain/HA/charging-instruction/current-charging-instruction";
-import {
-  currentChargingState,
-  lastUpdatedChargingState,
-} from "../domain/smappee/charging/current-charging-state";
+import { getInfoCurrentChargingState } from "../domain/smappee/charging/current-charging-state";
 import { HA_CHARGE_INSTRUCTION } from "../models/HA/ha-charge-instruction";
 
 const chargeInstructionRouter = express.Router();
@@ -21,10 +19,13 @@ const chargeInstructionRouter = express.Router();
  *         description: Returns a mysterious string.
  */
 chargeInstructionRouter.get("/", async (req: Request, res: Response) => {
+  const chargingInfoSmappee = getInfoCurrentChargingState();
+  const formattedLastUpdatedChargingState = dayjs(
+    chargingInfoSmappee.lastUpdatedChargingState
+  ).format("YYYY-MM-DDTHH:mm:ssZ");
   res.send({
-    currentChargeInstruction,
-    currentChargingState,
-    lastUpdatedChargingState,
+    ...chargingInfoSmappee,
+    lastUpdatedChargingState: formattedLastUpdatedChargingState,
   });
 });
 

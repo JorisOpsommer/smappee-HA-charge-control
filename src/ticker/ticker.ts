@@ -1,7 +1,7 @@
 import { currentChargeInstruction } from "../domain/HA/charging-instruction/current-charging-instruction";
 import { getEntityState } from "../domain/HA/entity-states/get-entity-state";
-import { decisionMaker } from "../manager/decision-maker";
 import { currentChargingState } from "../domain/smappee/charging/current-charging-state";
+import { decisionMaker } from "../manager/decision-maker";
 
 const MOVING_AVERAGE_LENGTH = 10;
 

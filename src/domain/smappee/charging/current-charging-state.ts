@@ -5,7 +5,7 @@ import { logger } from "../../../utils/logger";
 const MIN_UPDATE_INTERVAL_IN_MINUTES = 10;
 
 export let currentChargingState: CHARGE_STATE = CHARGE_STATE.PAUSED;
-export let lastUpdatedChargingState: Date = dayjs().subtract(1, "day").toDate();
+let lastUpdatedChargingState: Date = dayjs().subtract(1, "day").toDate();
 let isLockedChargingState: boolean = false;
 
 export const setCurrentChargingState = (
@@ -20,6 +20,18 @@ export const setCurrentChargingState = (
 
 export const setIsLockedChargingState = (state: boolean) => {
   isLockedChargingState = state;
+};
+
+export const getInfoCurrentChargingState = (): {
+  currentChargingState: CHARGE_STATE;
+  lastUpdatedChargingState: Date;
+  isLockedChargingState: boolean;
+} => {
+  return {
+    currentChargingState,
+    lastUpdatedChargingState,
+    isLockedChargingState,
+  };
 };
 
 const canUpdateChargingState = (visibleStateUpdate): boolean => {

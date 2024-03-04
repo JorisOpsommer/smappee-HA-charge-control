@@ -1,6 +1,5 @@
 import fetch from "node-fetch";
 import { logger } from "../../../utils/logger";
-import { ChargingParkSessionType } from "./charging-park-session-type";
 import { ServiceLocationType } from "./service-location-type";
 
 let SERVICE_LOCATION_ID: number;

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { getChargingParkActiveSession } from "../domain/smappee/charging/get-charging-park-active-session";
 import { getAccessToken } from "../domain/smappee/auth/authManager";
+import { getChargingParkActiveSession } from "../domain/smappee/charging/get-charging-park-active-session";
 import { getChargingParkLocationId } from "../domain/smappee/charging/get-charging-park-location-id";
 import { forceActiveChargingToHandleNewSessions } from "../manager/force-active-charging-to-handle-new-sessions";
 
