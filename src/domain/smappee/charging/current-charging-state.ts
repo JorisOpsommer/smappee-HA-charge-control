@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { CHARGE_STATE } from "../../../models/smappee/charge-state-enum";
 import { logger } from "../../../utils/logger";
+import { updateChargingMode } from "./updateChargingMode";
 
 const MIN_UPDATE_INTERVAL_IN_MINUTES = 10;
 
@@ -8,13 +9,22 @@ export let currentChargingState: CHARGE_STATE = CHARGE_STATE.PAUSED;
 let lastUpdatedChargingState: Date = dayjs().subtract(1, "day").toDate();
 let isLockedChargingState: boolean = false;
 
-export const setCurrentChargingState = (
+export const setCurrentChargingState = async (
   state: CHARGE_STATE,
   visibleStateUpdate: boolean = true
 ) => {
-  if (canUpdateChargingState(visibleStateUpdate)) {
-    currentChargingState = state;
-    if (visibleStateUpdate) lastUpdatedChargingState = new Date();
+  if (currentChargingState !== state) {
+    if (canUpdateChargingState(visibleStateUpdate)) {
+      const updateResult = await updateChargingMode(state);
+
+      if (updateResult) {
+        logger.info(
+          "updated charging state smappee successfully, updating local current charging state"
+        );
+        currentChargingState = state;
+        if (visibleStateUpdate) lastUpdatedChargingState = new Date();
+      }
+    }
   }
 };
 

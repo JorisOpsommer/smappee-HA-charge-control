@@ -1,7 +1,3 @@
-import { HA_CHARGE_INSTRUCTION } from "../models/HA/ha-charge-instruction";
-import { CHARGE_STATE } from "../models/smappee/charge-state-enum";
-import { updateChargingMode } from "../domain/smappee/charging/updateChargingMode";
-import { logger } from "../utils/logger";
 import {
   SLOWCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD,
   SLOWCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD,
@@ -10,6 +6,10 @@ import {
   SUNCHARGE_SLOW_TO_PAUSED_INVERTER_THRESHOLD,
   SUNCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD,
 } from "../constants";
+import { setCurrentChargingState } from "../domain/smappee/charging/current-charging-state";
+import { HA_CHARGE_INSTRUCTION } from "../models/HA/ha-charge-instruction";
+import { CHARGE_STATE } from "../models/smappee/charge-state-enum";
+import { logger } from "../utils/logger";
 
 export const decisionMaker = (
   sensorPowerConsumedInWatt: number,
@@ -55,16 +55,16 @@ const decisionSlowCharge = async (
 ) => {
   if (currentChargingState === CHARGE_STATE.PAUSED) {
     if (sensorPowerConsumedInWatt < SLOWCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD) {
-      await updateChargingMode(CHARGE_STATE.SLOW);
+      await setCurrentChargingState(CHARGE_STATE.SLOW);
     }
   } else if (currentChargingState === CHARGE_STATE.SLOW) {
     if (sensorPowerConsumedInWatt > SLOWCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD) {
-      await updateChargingMode(CHARGE_STATE.PAUSED);
+      await setCurrentChargingState(CHARGE_STATE.PAUSED);
     }
   }
 
   if (currentChargingState === CHARGE_STATE.TURBO)
-    await updateChargingMode(CHARGE_STATE.PAUSED, false);
+    await setCurrentChargingState(CHARGE_STATE.PAUSED, false);
 };
 
 const decissionSunCharge = async (
@@ -77,7 +77,7 @@ const decissionSunCharge = async (
       sensorPowerConsumedInWatt < SUNCHARGE_PAUSED_TO_SLOW_WATT_THRESHOLD &&
       sensorInverterSolarInWatt > SUNCHARGE_PAUSED_TO_SLOW_INVERTER_THRESHOLD
     ) {
-      await updateChargingMode(CHARGE_STATE.SLOW);
+      await setCurrentChargingState(CHARGE_STATE.SLOW);
     }
   }
 
@@ -86,21 +86,21 @@ const decissionSunCharge = async (
       sensorPowerConsumedInWatt > SUNCHARGE_SLOW_TO_PAUSED_WATT_THRESHOLD ||
       sensorInverterSolarInWatt < SUNCHARGE_SLOW_TO_PAUSED_INVERTER_THRESHOLD
     ) {
-      await updateChargingMode(CHARGE_STATE.PAUSED);
+      await setCurrentChargingState(CHARGE_STATE.PAUSED);
     }
   }
 
   if (currentChargingState === CHARGE_STATE.TURBO)
-    await updateChargingMode(CHARGE_STATE.PAUSED, false);
+    await setCurrentChargingState(CHARGE_STATE.PAUSED, false);
 };
 
 const decissionTurboCharge = async (currentChargingState: CHARGE_STATE) => {
   if (currentChargingState !== CHARGE_STATE.TURBO) {
-    await updateChargingMode(CHARGE_STATE.TURBO, false);
+    await setCurrentChargingState(CHARGE_STATE.TURBO, false);
   }
 };
 
 const decissionPausedCharge = async (currentChargingState: CHARGE_STATE) => {
   if (currentChargingState !== CHARGE_STATE.PAUSED)
-    await updateChargingMode(CHARGE_STATE.PAUSED, false);
+    await setCurrentChargingState(CHARGE_STATE.PAUSED, false);
 };

@@ -9,10 +9,7 @@ import { logger } from "../../../utils/logger";
 
 const PUT_CHARGING_MODE_URL = `${process.env.SMAPPEE_BASEURL}/chargingstations/${process.env.SMAPPEE_SERIALID_MOBILE_APP}/connectors/1/mode`;
 
-export const updateChargingMode = async (
-  chargeSetting: CHARGE_STATE,
-  isNewLastUpdated: boolean = true
-) => {
+export const updateChargingMode = async (chargeSetting: CHARGE_STATE) => {
   if (chargeSetting !== currentChargingState) {
     logger.info(
       `updatechargingmode from ${currentChargingState} to ${chargeSetting}`
@@ -32,8 +29,7 @@ export const updateChargingMode = async (
       },
     }).then((result) => {
       if (result.ok) {
-        setCurrentChargingState(chargeSetting, isNewLastUpdated);
-        return;
+        return true;
       } else {
         logger.error(
           `HTTP error! ${PUT_CHARGING_MODE_URL}, status: ${result.status}`
