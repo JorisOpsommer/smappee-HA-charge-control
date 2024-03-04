@@ -29,7 +29,7 @@ export const forceActiveChargingToHandleNewSessions = async (
       isSessionActive = false;
       break;
   }
-  if (isSessionActive && session.to) {
+  if (isSessionActive) {
     setIsLockedChargingState(false);
     logger.info(`isSessionActive ${isSessionActive}, so unlock charging state`);
   } else {
