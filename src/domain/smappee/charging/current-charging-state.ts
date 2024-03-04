@@ -19,7 +19,7 @@ export const setCurrentChargingState = async (
 
       if (updateResult) {
         logger.info(
-          "updated charging state smappee successfully, updating local current charging state"
+          `updated charging state smappee to ${state} successfully, updating local current charging state`
         );
         currentChargingState = state;
         if (visibleStateUpdate) lastUpdatedChargingState = new Date();
@@ -29,7 +29,10 @@ export const setCurrentChargingState = async (
 };
 
 export const setIsLockedChargingState = (state: boolean) => {
-  isLockedChargingState = state;
+  if (isLockedChargingState !== state) {
+    logger.info(`setIsLockedChargingState to ${state}`);
+    isLockedChargingState = state;
+  }
 };
 
 export const getInfoCurrentChargingState = (): {
@@ -45,9 +48,6 @@ export const getInfoCurrentChargingState = (): {
 };
 
 const canUpdateChargingState = (visibleStateUpdate): boolean => {
-  logger.info(
-    `canUpdateChargingState, visibleStateUpdate: ${visibleStateUpdate}, isLockedChargingState: ${isLockedChargingState}`
-  );
   if (isLockedChargingState) return false;
   if (!visibleStateUpdate) return true; //it's not a visible state so don't check if state is older than x minutes.
 

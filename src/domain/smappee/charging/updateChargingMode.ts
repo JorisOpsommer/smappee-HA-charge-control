@@ -1,21 +1,11 @@
 import fetch from "node-fetch";
-import { getAccessToken } from "../auth/authManager";
 import { CHARGE_STATE } from "../../../models/smappee/charge-state-enum";
-import {
-  currentChargingState,
-  setCurrentChargingState,
-} from "./current-charging-state";
 import { logger } from "../../../utils/logger";
+import { getAccessToken } from "../auth/authManager";
 
 const PUT_CHARGING_MODE_URL = `${process.env.SMAPPEE_BASEURL}/chargingstations/${process.env.SMAPPEE_SERIALID_MOBILE_APP}/connectors/1/mode`;
 
 export const updateChargingMode = async (chargeSetting: CHARGE_STATE) => {
-  if (chargeSetting !== currentChargingState) {
-    logger.info(
-      `updatechargingmode from ${currentChargingState} to ${chargeSetting}`
-    );
-  }
-
   const tokenSmappee = await getAccessToken();
   const body = getApiSettingsForCharging(chargeSetting);
 

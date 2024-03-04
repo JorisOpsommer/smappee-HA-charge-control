@@ -31,13 +31,9 @@ export const forceActiveChargingToHandleNewSessions = async (
   }
   if (isSessionActive) {
     setIsLockedChargingState(false);
-    logger.info(`isSessionActive ${isSessionActive}, so unlock charging state`);
   } else {
     //session inactive
     setCurrentChargingState(CHARGE_STATE.SLOW, false);
     setIsLockedChargingState(true);
-    logger.info(
-      `isSessionActive ${isSessionActive}, so lock charging state & set charging state to active so we can badge new session`
-    );
   }
 };
