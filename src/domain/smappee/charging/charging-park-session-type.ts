@@ -6,6 +6,7 @@ export type ChargingParkSessionType = {
   rfid?: string;
   userId?: number;
   from: number;
+  to?: number;
   status: CHARGING_PARK_SESSION_STATUS;
   suspendedByUser: boolean;
   smartMode: string;
@@ -14,7 +15,6 @@ export type ChargingParkSessionType = {
   maxAmperes: number[];
   startReading: number;
   energy: number;
-  to?: number;
   stopReading?: number;
 };
 

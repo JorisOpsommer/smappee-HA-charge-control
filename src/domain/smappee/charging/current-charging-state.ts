@@ -6,16 +6,29 @@ const MIN_UPDATE_INTERVAL_IN_MINUTES = 10;
 
 export let currentChargingState: CHARGE_STATE = CHARGE_STATE.PAUSED;
 export let lastUpdatedChargingState: Date = dayjs().subtract(1, "day").toDate();
+let isLockedChargingState: boolean = false;
 
 export const setCurrentChargingState = (
   state: CHARGE_STATE,
-  isNewLastUpdated: boolean = true
+  visibleStateUpdate: boolean = true
 ) => {
-  currentChargingState = state;
-  if (isNewLastUpdated) lastUpdatedChargingState = new Date();
+  if (canUpdateChargingState(visibleStateUpdate)) {
+    currentChargingState = state;
+    if (visibleStateUpdate) lastUpdatedChargingState = new Date();
+  }
 };
 
-export const canUpdateChargingState = (): boolean => {
+export const setIsLockedChargingState = (state: boolean) => {
+  isLockedChargingState = state;
+};
+
+const canUpdateChargingState = (visibleStateUpdate): boolean => {
+  logger.info(
+    `canUpdateChargingState, visibleStateUpdate: ${visibleStateUpdate}, isLockedChargingState: ${isLockedChargingState}`
+  );
+  if (isLockedChargingState) return false;
+  if (!visibleStateUpdate) return true; //it's not a visible state so don't check if state is older than x minutes.
+
   const lastUpdate = dayjs(lastUpdatedChargingState);
 
   if (dayjs().diff(lastUpdate, "minute") >= MIN_UPDATE_INTERVAL_IN_MINUTES)

@@ -41,6 +41,10 @@ export const decisionMaker = (
     case HA_CHARGE_INSTRUCTION.TURBO:
       decissionTurboCharge(currentChargingState);
       break;
+
+    case HA_CHARGE_INSTRUCTION.PAUSED:
+      decissionPausedCharge(currentChargingState);
+      break;
   }
 };
 
@@ -94,4 +98,9 @@ const decissionTurboCharge = async (currentChargingState: CHARGE_STATE) => {
   if (currentChargingState !== CHARGE_STATE.TURBO) {
     await updateChargingMode(CHARGE_STATE.TURBO, false);
   }
+};
+
+const decissionPausedCharge = async (currentChargingState: CHARGE_STATE) => {
+  if (currentChargingState !== CHARGE_STATE.PAUSED)
+    await updateChargingMode(CHARGE_STATE.PAUSED, false);
 };

@@ -2,7 +2,6 @@ import fetch from "node-fetch";
 import { getAccessToken } from "../auth/authManager";
 import { CHARGE_STATE } from "../../../models/smappee/charge-state-enum";
 import {
-  canUpdateChargingState,
   currentChargingState,
   setCurrentChargingState,
 } from "./current-charging-state";
@@ -20,15 +19,11 @@ export const updateChargingMode = async (
     );
   }
 
-  if (isNewLastUpdated && !canUpdateChargingState()) {
-    return Promise.resolve();
-  }
-
   const tokenSmappee = await getAccessToken();
   const body = getApiSettingsForCharging(chargeSetting);
 
   try {
-    return fetch(PUT_CHARGING_MODE_URL, {
+    return await fetch(PUT_CHARGING_MODE_URL, {
       method: "PUT",
       body: JSON.stringify(body),
       headers: {
