@@ -26,6 +26,7 @@ chargeInstructionRouter.get("/", async (req: Request, res: Response) => {
   res.send({
     ...chargingInfoSmappee,
     lastUpdatedChargingState: formattedLastUpdatedChargingState,
+    currentChargeInstruction,
   });
 });
 
