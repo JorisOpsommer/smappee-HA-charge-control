@@ -7,13 +7,13 @@ import {
   setIsLockedChargingState,
 } from "../domain/smappee/charging/current-charging-state";
 import { CHARGE_STATE } from "../models/smappee/charge-state-enum";
-import { logger } from "../utils/logger";
 
 //when no car is charging we want to put the session to active so we can badge properly.
 export const forceActiveChargingToHandleNewSessions = async (
   session: ChargingParkSessionType
 ) => {
-  if (!session) return;
+  //discard if session is empty.
+  if (!session || !session.status) return;
 
   let isSessionActive: boolean = false;
   switch (session.status) {

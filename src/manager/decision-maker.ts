@@ -25,11 +25,7 @@ export const decisionMaker = (
   });
   switch (currentChargeInstruction) {
     case HA_CHARGE_INSTRUCTION.SLOW:
-      decisionSlowCharge(
-        sensorPowerConsumedInWatt,
-        sensorInverterSolarInWatt,
-        currentChargingState
-      );
+      decisionSlowCharge(sensorPowerConsumedInWatt, currentChargingState);
       break;
     case HA_CHARGE_INSTRUCTION.SUN:
       decissionSunCharge(
@@ -50,7 +46,6 @@ export const decisionMaker = (
 
 const decisionSlowCharge = async (
   sensorPowerConsumedInWatt: number,
-  sensorInverterSolarInWatt: number,
   currentChargingState: CHARGE_STATE
 ) => {
   if (currentChargingState === CHARGE_STATE.PAUSED) {

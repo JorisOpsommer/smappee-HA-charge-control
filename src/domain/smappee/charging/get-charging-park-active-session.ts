@@ -21,8 +21,7 @@ export const getChargingParkActiveSession = async (
       throw new Error(`HTTP error! status: ${result.status}`);
     }
 
-    const chargingParkSessions: ChargingParkSessionType[] =
-      (await result.json()) as any;
+    const chargingParkSessions: ChargingParkSessionType[] = await result.json();
     const lastChargingParkSession = chargingParkSessions?.[0];
     return lastChargingParkSession;
   } catch (error) {
